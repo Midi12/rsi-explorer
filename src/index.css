@@ -39,3 +39,13 @@ body {
     box-shadow:none !important;
     outline:0px !important;
 }
+
+.vertical-align {
+    vertical-align: middle;
+}
+
+#divFileTree {
+    overflow-y: auto !important;
+    margin-top: 20px;
+    background-color: transparent;
+}

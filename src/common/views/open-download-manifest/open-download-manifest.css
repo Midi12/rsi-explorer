@@ -1,0 +1,38 @@
+html,
+body {
+  overflow: hidden !important;
+}
+
+.manifest-link {
+  color: #05263E !important;
+}
+
+.manifest-link:hover {
+  cursor: pointer;
+}
+
+.footer {
+  background-color: #05263E;
+  color: #00F0F9;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #05263E;
+  color: #00F0F9;
+  border-color: #00F0F9;
+}
+
+.btn-primary:hover {
+  background-color: #00F0F9;
+  color: #05263E;
+  border-color: #05263E;
+}
+
+.btn-primary:focus
+.btn-primary:active {
+  box-shadow:none !important;
+  outline:0px !important;
+}

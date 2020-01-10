@@ -18,10 +18,15 @@
   },
   "homepage": "https://github.com/Midi12/rsi-explorer#readme",
   "devDependencies": {
-    "electron": "^7.1.0"
+    "electron": "^8.0.0-beta.2"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "electron-tree-view": "^1.1.0"
+    "electron-store": "^5.1.0",
+    "electron-tree-view": "^1.1.0",
+    "kaitai-struct": "^0.8.0-SNAPSHOT.11",
+    "node-fetch": "^2.6.0",
+    "set-cookie-parser": "^2.4.0",
+    "tabulator-tables": "^4.4.3"
   }
 }

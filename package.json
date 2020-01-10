@@ -1,0 +1,19 @@
+{
+  "name": "rsi-explorer",
+  "version": "1.0.0",
+  "description": "Explore and download files from Roberts Space Industry objects store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Midi12/rsi-explorer.git"
+  },
+  "author": "Midi12",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Midi12/rsi-explorer/issues"
+  },
+  "homepage": "https://github.com/Midi12/rsi-explorer#readme"
+}

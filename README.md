@@ -1,2 +1,2 @@
 # rsi-explorer
-Download files from Roberts Space Industry objects store
+Explore and download files from Roberts Space Industry objects store

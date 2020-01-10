@@ -1,13 +1,17 @@
 const { app, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 const Window = require('./common/windows/window');
 const Signin = require('./common/controllers/signin');
 const Games = require('./common/controllers/games');
 const RsiManifest = require('./common/controllers/rsi-manifest');
+const ObjectStore = require('./common/controllers/object-store');
 
 let mainWindow = null;
 let manifestWindow = null;
+
+global.DownloadFolder = `Downloads`;
 
 app.on('ready', () => {
 
@@ -125,8 +129,26 @@ ipcMain.on('game-list@open-window', (event) => {
     );
 });
 
+let rsiManifestFile = null;
 ipcMain.on('manifest@parse', (event, filePath) => {
-    const rsiManifestFile = new RsiManifest();
+    const games = new Games();
+    if (games == undefined) {
+        throw Error('Cannot start games module');
+    }
+
+    const _path = path.parse(filePath);
+    const filename = _path.base;
+    const rgxMatches = new RegExp(/([A-Z]+)\-([A-Z]+)\-\d+\.manifest/gm).exec(filename);
+    if (rgxMatches == undefined || rgxMatches.length == 0) {
+        throw Error('Failed to parse filename');
+    }
+
+    const gameId = rgxMatches[1];
+    const channelId = rgxMatches[2];
+
+    games.getRelease(gameId, channelId).then(releaseInfo => global.releaseInfo = releaseInfo.data);
+
+    rsiManifestFile = new RsiManifest();
     if (rsiManifestFile == undefined) {
         throw Error('Cannot build manifest parser');
     }
@@ -142,4 +164,32 @@ ipcMain.on('manifest@parse', (event, filePath) => {
         mainWindow.send('manifest@update-parsing-state', 'Parsing complete');
         mainWindow.send('manifest@update-file-tree', filesTree);
     });
+});
+
+ipcMain.on('manifest@download-file', (event, fileData) => {
+    const index = fileData.index;
+    const _path = path.parse(fileData.path);
+
+    const releaseInfo = global.releaseInfo;
+
+    const filename = _path.base;
+    const filepath = _path.dir;
+    const targetFolder = `${global.DownloadFolder}/${releaseInfo.gameId}-${releaseInfo.channelId}-${releaseInfo.version}`;
+
+    if (!fs.existsSync(`${targetFolder}/${filepath}`)) {
+        fs.mkdirSync(`${targetFolder}/${filepath}`, { recursive: true });
+    }
+
+    const fileRecord = rsiManifestFile.getFileRecord(index);
+
+    if (releaseInfo == undefined) {
+        throw Error('releaseInfo undefined');
+    }
+
+    const objectStore = new ObjectStore(releaseInfo.objects);
+    if (objectStore == undefined) {
+        throw Error('Unable to create ObjectStore');
+    }
+
+    objectStore.downloadFile(fileRecord, `${targetFolder}/${filepath}`, filename, (current, total, percent) => mainWindow.send('manifest@download-file-update', { current: current, total: total, percent: percent }), null).then(() => {});
 });

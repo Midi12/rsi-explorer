@@ -48,7 +48,7 @@ buildFilesTreeFromStringTable = (stringTable) => {
         const paths = item.path.split('\\');
         paths.reduce((q, path) => {
             let temp = q.find(o => o.path === path);
-            
+
             if (!temp) {
                 temp = { path: path };
                 
@@ -97,8 +97,12 @@ class RsiManifest {
         return this.parsedManifest;
     }
 
-    getFileRecord(id) {
-        return this.parsedManifest
+    getFileRecord(index) {
+        if (index <= 0) {
+            throw Error('index <= 0');
+        }
+        
+        return this.parsedManifest.indexRecords[index - 1];
     }
 }
 

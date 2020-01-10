@@ -1,49 +1,80 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../node_modules/tabulator-tables/dist/css/tabulator.min.css">
-        <link rel="stylesheet" href="index.css">
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row header">
-                <div class="col">
-                    <h2>rsi-explorer</h2>&nbsp;<small>by Midi12</small>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="d-none" id="divFileTreeParsingState">
-                    </div>
-                    <div id="divFileTree">
-                    </div>
-                </div>
-            </div>
-            <div class="row footer">
-                <div class="col">
-                    <form class="form-inline" id="frmLogin">
-                        <!-- login form -->
-                        <div class="form-group mt-3">
-                            <input type="text" class="form-control form-control-sm mr-1" id="iptUsername" placeholder="Username">
-                            <input type="password" class="form-control form-control-sm mr-1" id="iptPassword" placeholder="Password">
-                            <img hidden="true" class="img-responsive" alt="Captcha" id="imgCaptcha">
-                            <input hidden="true" type="text" class="form-control form-control-sm mr-1" id="iptCaptcha" placeholder="Captcha">
-                            <input hidden="true" type="text" class="form-control form-control-sm mr-1" id="iptAuthenticator" placeholder="Authenticator code">
-                        </div>
-                        <button type="button" class="btn btn-primary btn-sm mt-3" id="btnLogin">Login</button>
-                        <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3" id="btnValidate">Validate</button>
-                        <!-- login form -->
 
-                        <!-- user form -->
-                        <span hidden="true" id="spConnectedAs" class="vertical-align mt-3 ml-2"></span>
-                        <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3 float-right ml-2" id="btnOpenDownloadManifest">Open Or Download Manifest</button>
-                        <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3 float-right" id="btnLogout">Logout</button>
-                        <!-- user form -->
-                    </form>
+<head>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/tabulator-tables/dist/css/tabulator.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row header">
+            <div class="col">
+                <h2>rsi-explorer</h2>&nbsp;<small>by Midi12</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="d-none" id="divFileTreeParsingState">
+                </div>
+                <div id="divFileTree">
                 </div>
             </div>
         </div>
-    </body>
-    
-    <script src="app.js"></script>
+        <div class="row footer">
+            <div class="col">
+                <form class="form-inline" id="frmLogin">
+                    <!-- login form -->
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control form-control-sm mr-1" id="iptUsername"
+                            placeholder="Username">
+                        <input type="password" class="form-control form-control-sm mr-1" id="iptPassword"
+                            placeholder="Password">
+                        <img hidden="true" class="img-responsive" alt="Captcha" id="imgCaptcha">
+                        <input hidden="true" type="text" class="form-control form-control-sm mr-1" id="iptCaptcha"
+                            placeholder="Captcha">
+                        <input hidden="true" type="text" class="form-control form-control-sm mr-1" id="iptAuthenticator"
+                            placeholder="Authenticator code">
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm mt-3" id="btnLogin">Login</button>
+                    <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3"
+                        id="btnValidate">Validate</button>
+                    <!-- login form -->
+
+                    <!-- user form -->
+                    <span hidden="true" id="spConnectedAs" class="vertical-align mt-3 ml-2"></span>
+                    <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3 float-right ml-2"
+                        id="btnOpenDownloadManifest">Open Or Download Manifest</button>
+                    <button hidden="true" type="button" class="btn btn-primary btn-sm mt-3 float-right"
+                        id="btnLogout">Logout</button>
+                    <!-- user form -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="downloadFileModal" tabindex="-1" role="dialog"
+        aria-labelledby="downloadFileModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Download file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="downloadFileModalText">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelFileDownloadBtn" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="launchFileDownloadBtn">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="app.js"></script>
+
 </html>

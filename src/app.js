@@ -233,6 +233,59 @@ ipcRenderer.on('manifest@update-file-tree', (event, filesTree) => {
         children: filesTree
     }];
 
+    const onRowClick = (event, row) => {
+        const data = row.getData();
+        if (data != undefined && data.index != undefined) {
+            const _data = JSON.parse(JSON.stringify(data)); // deep copy
+
+            const computeFullPath = (parent, path) => {
+                let _path = path;
+
+                while (parent !== false) {
+                    _path = `${parent.data.path}/${_path}`;
+                    parent = parent.modules.dataTree.parent;
+                }
+
+                return _path.startsWith('//') ? _path.substring(2, _path.length) : _path;
+            }
+
+            _data.path = computeFullPath(row._row.modules.dataTree.parent, _data.path);
+
+            // show popup
+            const downloadFileModal = document.getElementById('downloadFileModal');
+            if (downloadFileModal == undefined) {
+                throw Error('downloadFileModal undefined');
+            }
+
+            const downloadFileModalText = document.getElementById('downloadFileModalText');
+            if (downloadFileModalText == undefined) {
+                throw Error('downloadFileModalText undefined');
+            }
+
+            const launchFileDownloadBtn = document.getElementById('launchFileDownloadBtn');
+            if (launchFileDownloadBtn == undefined) {
+                throw Error('launchFileDownloadBtn undefined');
+            }
+
+            const cancelFileDownloadBtn = document.getElementById('cancelFileDownloadBtn');
+            if (cancelFileDownloadBtn == undefined) {
+                throw Error('cancelFileDownloadBtn undefined');
+            }
+
+            downloadFileModalText.innerHTML = `Download ${_data.path} ?`;
+            launchFileDownloadBtn.onclick = () => {
+                cancelFileDownloadBtn.disabled = true;
+                launchFileDownloadBtn.disabled = true;
+                ipcRenderer.send('manifest@download-file', _data);
+            }
+            cancelFileDownloadBtn.onclick = () => {
+                downloadFileModal.style.display = "none";
+            }
+
+            downloadFileModal.style.display = "block";
+        }
+    };
+
     /*const tree = */new Tabulator('#divFileTree', {
         layout: 'fitColumns',
         height: 600,
@@ -241,7 +294,39 @@ ipcRenderer.on('manifest@update-file-tree', (event, filesTree) => {
         dataTreeStartExpanded: false,
         dataTreeChildField: 'children',
         columns: [
-            { title: 'Path', field: 'path', width: '100%', responsive: 0 }
-        ]
+            { title: 'Path', field: 'path', width: '100%', responsive: 0, headerSort: false }
+        ],
+        rowClick: onRowClick/*,
+        rowContext: onRowClick*/
     });
+});
+
+ipcRenderer.on('manifest@download-file-update', (event, updateData) => {
+    const downloadFileModal = document.getElementById('downloadFileModal');
+    if (downloadFileModal == undefined) {
+        throw Error('downloadFileModal undefined');
+    }
+
+    const downloadFileModalText = document.getElementById('downloadFileModalText');
+    if (downloadFileModalText == undefined) {
+        throw Error('downloadFileModalText undefined');
+    }
+
+    const launchFileDownloadBtn = document.getElementById('launchFileDownloadBtn');
+    if (launchFileDownloadBtn == undefined) {
+        throw Error('launchFileDownloadBtn undefined');
+    }
+
+    const cancelFileDownloadBtn = document.getElementById('cancelFileDownloadBtn');
+    if (cancelFileDownloadBtn == undefined) {
+        throw Error('cancelFileDownloadBtn undefined');
+    }
+
+    if (updateData.percent < 100) {
+        downloadFileModalText.innerHTML = `Downloaded ${updateData.current} bytes out of ${updateData.total} (${updateData.percent}%)`;
+    } else {
+        downloadFileModal.style.display = "none";
+        cancelFileDownloadBtn.disabled = false;
+        launchFileDownloadBtn.disabled = false;
+    }
 });

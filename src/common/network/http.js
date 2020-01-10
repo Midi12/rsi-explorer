@@ -57,7 +57,7 @@ class Http {
             throw Error('url is not a string');
         }
 
-        if (headers != null && !(headers instanceof fetch.Headers)) {
+        if (headers != undefined && !(headers instanceof fetch.Headers)) {
             throw Error('headers is not a fetch.Headers object');
         }
 
@@ -75,7 +75,7 @@ class Http {
             throw Error('url is not a string');
         }
 
-        if (headers != null && !(headers instanceof fetch.Headers)) {
+        if (headers != undefined && !(headers instanceof fetch.Headers)) {
             throw Error('headers is not a fetch.Headers object');
         }
 
@@ -113,7 +113,7 @@ class Http {
             throw Error('url is not a string');
         }
 
-        if (headers != null && !(headers instanceof fetch.Headers)) {
+        if (headers != undefined && !(headers instanceof fetch.Headers)) {
             throw Error('headers is not a fetch.Headers object');
         }
 
@@ -137,20 +137,27 @@ class Http {
                 let bytesDone = 0;
     
                 reader.on('data', chunk => {
-                    if (progressCallback != null) {
+                    if (progressCallback != undefined) {
                         bytesDone += chunk.byteLength;
                         const percent = Math.floor(bytesDone / finalLength * 100);
                         progressCallback(bytesDone, finalLength, percent);
+
+                        //handle small dl
+                        if (percent === 100) {
+                            if (completeCallback != undefined) {
+                                completeCallback();
+                            }
+                        }
                     }
                 });
     
                 reader.on('error', err => reject(err));
                 reader.on('finish', () =>  {
-                    if (progressCallback != null) {
+                    if (progressCallback != undefined) {
                         progressCallback(bytesDone, finalLength, 100);
                     }
     
-                    if (completeCallback != null) {
+                    if (completeCallback != undefined) {
                         completeCallback();
                     }
     

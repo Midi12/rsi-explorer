@@ -20,9 +20,10 @@ class ObjectStore {
                         throw err;
                     }
         
-                    fs.unlinkSync(`${path}/${recordSha256}`);
+                    if (fs.existsSync(`${path}/${recordSha256}`)) {
+                        fs.unlinkSync(`${path}/${recordSha256}`);
+                    }
 
-                    console.log();
                     console.log(`File ${path}/${filename} downloaded !`);
                 });
             } else {

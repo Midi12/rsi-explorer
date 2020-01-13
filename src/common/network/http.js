@@ -136,6 +136,7 @@ class Http {
             return new Promise((resolve, reject) => {
                 let bytesDone = 0;
     
+                let nChunk = 0;
                 reader.on('data', chunk => {
                     if (progressCallback != undefined) {
                         bytesDone += chunk.byteLength;
@@ -143,11 +144,13 @@ class Http {
                         progressCallback(bytesDone, finalLength, percent);
 
                         //handle small dl
-                        if (percent === 100) {
+                        if (percent === 100 && nChunk === 0) {
                             if (completeCallback != undefined) {
                                 completeCallback();
                             }
                         }
+
+                        nChunk++;
                     }
                 });
     
@@ -168,7 +171,12 @@ class Http {
             });
         };
     
-        await dlProm(response.body, writer, finalLength);
+        if (finalLength > 0) {
+            await dlProm(response.body, writer, finalLength);
+        } else {
+            progressCallback(0, 0, 100);
+            completeCallback();
+        }
     }
 
     getSessionHeaders() {
